@@ -29,8 +29,9 @@ var face_detector_factories_once sync.Once
 
 func register_face_detector_factory(name string, fty FaceDetectorFactory) {
 	face_detector_factories_once.Do(func() {
-		face_detector_factories[name] = fty
+		face_detector_factories = make(map[string]FaceDetectorFactory)
 	})
+	face_detector_factories[name] = fty
 }
 
 func NewFaceDetector(name string, args ...interface{}) (FaceDetector, error) {

@@ -104,6 +104,7 @@ func (dfd *DahuaFaceDetector) fsnotify_loop(fn string, sign chan struct{}) {
 		case <-time.After(dfd.opt.Fsnotifyloop.Timeout):
 			dfd.mainloop_chan <- fn
 			logger.Debugf("file done")
+			return
 		}
 	}
 }
@@ -222,6 +223,9 @@ func NewDahuaFaceDetector(args ...interface{}) (FaceDetector, error) {
 		mainloop_chan: make(chan string),
 		fsnotify_map:  make(map[string]chan struct{}),
 	}
+
+	go dfd.watchloop()
+	go dfd.mainloop()
 
 	return dfd, nil
 }
