@@ -1,1 +1,1 @@
-# metathings-face-detector-sensor
+# metathings-sensor-face-detector
