@@ -17,6 +17,19 @@ type FaceDetected interface {
 	Snapshot() []byte
 }
 
+func ToFaceDetectedE(evt Event) (FaceDetected, error) {
+	fde, ok := evt.(FaceDetected)
+	if !ok {
+		return nil, ErrUnexpectedEvent
+	}
+	return fde, nil
+}
+
+func ToFaceDetected(evt Event) FaceDetected {
+	fde, _ := ToFaceDetectedE(evt)
+	return fde
+}
+
 type FaceDetector interface {
 	Detect() <-chan Event
 	Close()

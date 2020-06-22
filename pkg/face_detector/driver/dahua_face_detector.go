@@ -130,17 +130,17 @@ func (dfd *DahuaFaceDetector) mainloop() {
 				return
 			}
 
-			buf, err := ioutil.ReadFile(fn)
-			if err != nil {
-				logger.WithError(err).Debugf("failed to read file")
-				return
-			}
-
 			// send old face detected event and create new one.
 			if dfd.is_mfile(fn) {
 				if fdi != nil {
 					dfd.events <- fdi
 					fdi = nil
+				}
+
+				buf, err := ioutil.ReadFile(fn)
+				if err != nil {
+					logger.WithError(err).Debugf("failed to read file")
+					return
 				}
 
 				fdi = &FaceDetectedImpl{
@@ -149,6 +149,12 @@ func (dfd *DahuaFaceDetector) mainloop() {
 				}
 			} else if dfd.is_rfile(fn) {
 				if fdi != nil {
+					buf, err := ioutil.ReadFile(fn)
+					if err != nil {
+						logger.WithError(err).Debugf("failed to read file")
+						return
+					}
+
 					fdi.snapshot = buf
 					dfd.events <- fdi
 					fdi = nil
